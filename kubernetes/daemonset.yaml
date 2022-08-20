@@ -1,0 +1,30 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  labels:
+    app: dns-resolve-exporter
+  name: dns-resolve-exporter
+spec:
+  selector:
+    matchLabels:
+      app: dns-resolve-exporter
+  template:
+    metadata:
+      labels:
+        app: dns-resolve-exporter
+    spec:
+      containers:
+      - image: ghcr.io/uesyn/dns-resolve-exporter:latest
+        name: dns-resolve-exporter
+        args:
+        - --log-level=debug
+        - --interval=6s
+        - --server=10.96.0.10
+        - --timeout=5s
+        - --shutdown-grace-period=10s
+        - kubernetes.default.svc.cluster.local.
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 50m
+            memory: 50Mi
